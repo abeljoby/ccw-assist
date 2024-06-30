@@ -20,10 +20,7 @@ class _UpcomingTestsState extends State<UpcomingTests> {
         centerTitle: true,
         backgroundColor: Colors.amber,
       ),
-      body:  SingleChildScrollView(
-        child: GetTests(),
-      ),
-      
+      body: GetTests(),
     );
   }
 }
@@ -64,6 +61,43 @@ class GetTestsState extends State<GetTests> {
         && ((now.hour < endTime.hour) || (now.hour == endTime.hour && now.minute <= endTime.minute));
   }
 
+  Widget _buildTestSection(Map<String,dynamic> data, DocumentSnapshot document) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(data['StartDate'], style: const TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            Text(data['Course']),
+            Text(data['StartTime']),
+            Text("Modules ${data['Modules'].toString().substring(1, data['Modules'].toString().length - 1)}"),
+            const SizedBox(height: 16),
+            if(isValidTimeRange(data['StartTime'], data['Duration'])&&(currentDate == data['StartDate']))
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => TestScreen(id: document.id,data: data,email: emailID)),(Route<dynamic> route) => false);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.indigo,
+                      foregroundColor: Colors.white
+                    ),
+                    child: const Text('Attend Test'),
+                  ),
+                ],
+              ),
+            const Divider(),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -80,41 +114,8 @@ class GetTestsState extends State<GetTests> {
         return ListView(
           shrinkWrap: true,
           children: snapshot.data!.docs.map((DocumentSnapshot document) {
-          Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-            return Container(
-              padding: const EdgeInsets.all(16),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(data['StartDate'], style: const TextStyle(fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 8),
-                    Text(data['Course']),
-                    Text(data['StartTime']),
-                    Text("Modules ${data['Modules'].toString().substring(1, data['Modules'].toString().length - 1)}"),
-                    const SizedBox(height: 16),
-                    if(isValidTimeRange(data['StartTime'], data['Duration'])&&(currentDate == data['StartDate']))
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => TestScreen(id: document.id,data: data,email: emailID)),(Route<dynamic> route) => false);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.indigo,
-                              foregroundColor: Colors.white
-                            ),
-                            child: const Text('Attend Test'),
-                          ),
-                        ],
-                      ),
-                    const Divider(),
-                  ],
-                ),
-              ),
-            );
+            Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+            return _buildTestSection(data,document);
           }).toList(),
         );
       },

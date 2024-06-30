@@ -1,65 +1,3 @@
-// import 'package:flutter/material.dart';
-
-// class TestHistory extends StatefulWidget {
-//   const TestHistory({super.key});
-
-//   @override
-//   State<TestHistory> createState() => _TestHistoryState();
-// }
-
-// class _TestHistoryState extends State<TestHistory> {
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Test History'),
-//         centerTitle: true,
-//         backgroundColor: Colors.amber,
-//       ),
-//       body:  SingleChildScrollView(
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             // Tuesday, 19th March 2024
-//             _buildTestSection(
-//               date: 'Tuesday, 19th March 2024',
-//               courseName: 'Discrete Mathematical Structures',
-//               time: '11:15 am - 11:45 am',
-//               modules: 'Modules 1, 2',
-//             ),
-//             _buildTestSection(
-//               date: 'Tuesday, 19th March 2024',
-//               courseName: 'Discrete Mathematical Structures',
-//               time: '11:15 am - 11:45 am',
-//               modules: 'Modules 1, 2',
-//             ),
-//             _buildTestSection(
-//               date: 'Tuesday, 19th March 2024',
-//               courseName: 'Discrete Mathematical Structures',
-//               time: '11:15 am - 11:45 am',
-//               modules: 'Modules 1, 2',
-//             ),
-//             // Friday, 22nd March 2024
-//             _buildTestSection(
-//               date: 'Friday, 22nd March 2024',
-//               courseName: 'Discrete Mathematical Structures',
-//               time: '1:30 pm - 2:00 pm',
-//               modules: 'Modules 3, 4, 5',
-//             ),
-//             _buildTestSection(
-//               date: 'Friday, 22nd March 2024',
-//               courseName: 'Operating Systems',
-//               time: '2:30 pm - 3:00 pm',
-//               modules: 'Modules 1, 2',
-//             ),
-//             // Add more test sections as needed
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
 import 'package:ccwassist/screens/qpscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -82,10 +20,7 @@ class _TestHistoryState extends State<TestHistory> {
         centerTitle: true,
         backgroundColor: Colors.amber,
       ),
-      body:  SingleChildScrollView(
-        child: GetTests(),
-      ),
-      
+      body: GetTests(),
     );
   }
 }
@@ -107,7 +42,7 @@ class GetTestsState extends State<GetTests> {
     required String modules,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.only(left: 16,right: 16,top: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -115,7 +50,7 @@ class GetTestsState extends State<GetTests> {
           const SizedBox(height: 8),
           Text(courseName),
           Text(time),
-          Text(modules),
+          Text("Modules ${modules.toString().substring(1, modules.toString().length - 1)}"),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -157,18 +92,11 @@ class GetTestsState extends State<GetTests> {
         }
 
         return ListView(
+          // physics: const AlwaysScrollableScrollPhysics(),
           shrinkWrap: true,
           children: snapshot.data!.docs.map((DocumentSnapshot document) {
-          Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-            return Container(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildTestSection(date: data["StartDate"], courseName: data["Course"], time: data["StartTime"], modules: data["Modules"].toString())
-                ],
-              ),
-            );
+            Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+            return _buildTestSection(date: data["StartDate"], courseName: data["Course"], time: data["StartTime"], modules: data["Modules"].toString());
           }).toList(),
         );
       },

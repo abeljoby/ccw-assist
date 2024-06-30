@@ -73,20 +73,20 @@ class _ProfilePageState extends State<ProfilePage> {
               height: 60,
             ),
             ListTile(
-              title: Text("KTU ID : $ktuID",
+              title: Text("KTU ID: $ktuID",
                 style: TextStyle(fontSize: 15),
               ),
               textColor: Colors.black,
             ),
             ListTile(
-              title: Text("Department : $dept",
+              title: Text("Department: $dept",
                 style: TextStyle(fontSize: 15),
               ),
               textColor: Colors.black,
             ),
       //      const Divider(),
             ListTile(
-              title: Text("Batch : $batch",
+              title: Text("Batch: $batch",
                 style: TextStyle(fontSize: 15),
               ),
               textColor: Colors.black,
@@ -100,7 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
             // ),
           //  const Divider(),
             ListTile(
-              title: Text("Email ID : $email",
+              title: Text("Email ID: $email",
                 style: TextStyle(fontSize: 15),
               ),
               textColor: Colors.black,
