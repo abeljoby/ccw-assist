@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ccwassist/screens/questionpaper.dart';
+import 'package:ccwassist/screens/correctedqp.dart';
 
 class ResultPage extends StatefulWidget {
   final Map<String,dynamic> data;
   final String id;
   final String email;
   final List<String> ans;
-  const ResultPage({super.key,required this.id,required this.data,required this.ans,required this.email});
+  final List<int> res;
+  const ResultPage({super.key,required this.id,required this.data,required this.ans,required this.res,required this.email});
 
   @override
   State<ResultPage> createState() => _ResultPageState();
@@ -24,12 +25,14 @@ class _ResultPageState extends State<ResultPage> {
   late String testID = '';
   late List<String> answers = [];
   late String emailID = '';
+  late List<int> result = [];
 
   @override
   void initState() {
     testID = widget.id;
     testData = widget.data;
     answers = widget.ans;
+    result = widget.res;
     emailID = widget.email;
     super.initState();
   }
@@ -45,33 +48,6 @@ class _ResultPageState extends State<ResultPage> {
     return _questions;
   }
 
-  checkAnswers (List<Map<String,dynamic>> questionpaper,List<String> ans) {
-    int correct = 0;
-    int answered = 0;
-    int unanswered = 0;
-    int unvisited = 0;
-    int reviewed = 0;
-    for (var ques in questionpaper) {
-      if(ques['CorrectOption'] == ans[ques['qno']-1]) {
-        correct++;
-        answered++;
-      }
-      else if (ans[ques['qno']-1] == '') {
-        unanswered++;
-      }
-      else if (ans[ques['qno']-1] == 'R') {
-        reviewed++;
-      }
-      else if (ans[ques['qno']-1] == 'NV') {
-        unvisited++;
-      }
-      else {
-        answered++;
-      }
-    }
-    return [correct,answered,unanswered,unvisited,reviewed];
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,17 +60,16 @@ class _ResultPageState extends State<ResultPage> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Scaffold(
-              appBar: AppBar(title: Text('CCW Test 1')),
+              appBar: AppBar(title: Text('CCW Test')),
               body: Center(child: CircularProgressIndicator()),
             );
           } else if (snapshot.hasError || snapshot.data == null) {
             return Scaffold(
-              appBar: AppBar(title: Text('CCW Test 1')),
+              appBar: AppBar(title: Text('CCW Test')),
               body: Center(child: Text("Error fetching the data")),
             );
           } else if (snapshot.hasData){
             var questionPaper = snapshot.data as List<Map<String,dynamic>>;
-            var result = checkAnswers(questionPaper,answers);
             correct = result[0];
             answered = result[1];
             unanswered = result[2];
@@ -187,7 +162,26 @@ class _ResultPageState extends State<ResultPage> {
                               subtitle:
                                   const Text('Question Paper Analysis and Solutions'),
                               onTap: () {
-                                Navigator.push(context,MaterialPageRoute(builder: ((context) => QuestionPaper(data: testData,id: testID))));
+                                Navigator.push(context,MaterialPageRoute(builder: ((context) => CorrectedQuestionPaper(data: testData,id: testID,ans: answers,res: result,))));
+                              },
+                            )
+                          ],
+                        )),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Card(
+                        color: Colors.black,
+                        shadowColor: Colors.black,
+                        elevation: 7,
+                        child: Column(
+                          children: [
+                            ListTile(
+                              title: const Text('Return to home page',textAlign: TextAlign.center,style: TextStyle(color: Colors.amber),),
+                              // subtitle:
+                              //     const Text('Return to home page'),
+                              onTap: () {
+                                Navigator.popAndPushNamed(context, '/');
                               },
                             )
                           ],
@@ -206,7 +200,7 @@ class _ResultPageState extends State<ResultPage> {
                   const CircularProgressIndicator(),
                   const SizedBox(height: 20.0),
                   Text(
-                    'Please Wait while Questions are loading..',
+                    'Please Wait while Results are loading..',
                     style: TextStyle(
                       color: Theme.of(context).primaryColor,
                       decoration: TextDecoration.none,

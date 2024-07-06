@@ -1,11 +1,10 @@
 
 import 'dart:async';
-// import 'package:ccwassist/screens/quiz_result.dart';
 import 'package:ccwassist/screens/result.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-// create the TestScreen widget
-// I'm taking the Stateful widget because it's going to be our parent widget and all the functions and variables will be in this widget so we will need to change state of our widget.
+import 'package:shared_preferences/shared_preferences.dart';
+
 class TestScreen extends StatefulWidget {
   final Map<String,dynamic> data;
   final String id;
@@ -23,6 +22,15 @@ class _TestScreenState extends State<TestScreen> with TickerProviderStateMixin {
   late String emailID = "";
   late AnimationController _controller;
   late int noOfQuestions = 0;
+  late List<Map<String,dynamic>> questionPaper = [];
+  late List<int> result = [];
+
+  late String? name = '';
+  late String? batch = '';
+  late String? ktuID = '';
+  late String? email = '';
+  late String? dept = '';
+
   // Timer? timer;
   // int seconds = 60;
   int levelClock = 180;
@@ -37,26 +45,16 @@ class _TestScreenState extends State<TestScreen> with TickerProviderStateMixin {
   bool isAlreadyanswers = false;
   List<String> optionList = ['Option1','Option2','Option3','Option4'];
 
-  // final List<Question> _questions = [
-  //   Question(
-  //     id: '10',
-  //     title: 'What is 2 + 2 ?',
-  //     options: {'5': false, '30': false, '4': true, '10': false},
-  //   ),
-  //   Question(
-  //     id: '11',
-  //     title: 'What is 10 + 20 ?',
-  //     options: {'50': false, '30': true, '40': false, '10': false},
-  //   )
-  // ];
-
-  // startTimer() {
-  //   Timer.periodic(const Duration(seconds: 1), (timer) {
-  //     setState(() {
-  //       seconds--;
-  //     });
-  //   });
-  // }
+  void loadUserDetails() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      name = prefs.getString("name");
+      ktuID = prefs.getString("ktuID");
+      email = prefs.getString("email");
+      dept = prefs.getString("dept");
+      batch = prefs.getString("batch");
+    });
+  }
 
   Future<List<Map<String,dynamic>>> getQuestionPaper(testID) async {
     final QuerySnapshot<Map<String, dynamic>> snapshot = 
@@ -77,6 +75,7 @@ class _TestScreenState extends State<TestScreen> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    loadUserDetails();
     super.initState();
     testData = widget.data;
     testID = widget.id;
@@ -153,6 +152,33 @@ class _TestScreenState extends State<TestScreen> with TickerProviderStateMixin {
     Navigator.pop(context);
   }
 
+  checkAnswers (List<Map<String,dynamic>> questionpaper,List<String> ans) {
+    int correct = 0;
+    int answered = 0;
+    int unanswered = 0;
+    int unvisited = 0;
+    int reviewed = 0;
+    for (var ques in questionpaper) {
+      if(ques['CorrectOption'] == ans[ques['qno']-1]) {
+        correct++;
+        answered++;
+      }
+      else if (ans[ques['qno']-1] == '') {
+        unanswered++;
+      }
+      else if (ans[ques['qno']-1] == 'R') {
+        reviewed++;
+      }
+      else if (ans[ques['qno']-1] == 'NV') {
+        unvisited++;
+      }
+      else {
+        answered++;
+      }
+    }
+    return [correct,answered,unanswered,unvisited,reviewed];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -179,7 +205,19 @@ class _TestScreenState extends State<TestScreen> with TickerProviderStateMixin {
                         child: const Text('CANCEL'),
                       ),
                       TextButton(
-                        onPressed: () => Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => ResultPage(id: testID,data: testData,ans: answers,email: emailID)),ModalRoute.withName('/')),
+                        // onPressed: () => Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => ResultPage(id: testID,data: testData,ans: answers,email: emailID)),ModalRoute.withName('/')),
+                        onPressed: () {
+                          result = checkAnswers(questionPaper, answers);
+                          final resultDoc = <String, dynamic>{
+                            "Answers": answers,
+                            "Result": result 
+                          };
+                          FirebaseFirestore.instance.collection("tests").doc(testID).collection("results").doc(ktuID).set(resultDoc);
+                          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => ResultPage(id: testID,data: testData,ans: answers,res: result,email: emailID)),ModalRoute.withName('/'));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Test completed and submitted.')),
+                          );
+                        },
                         child: const Text('SUBMIT'),
                       ),
                     ],
@@ -229,7 +267,7 @@ class _TestScreenState extends State<TestScreen> with TickerProviderStateMixin {
                       body: Expanded(child: Center(child: Text("Error fetching the data"))),
                     );
                   } else if (snapshot.hasData){
-                    var questionPaper = snapshot.data as List<Map<String,dynamic>>;
+                    questionPaper = snapshot.data as List<Map<String,dynamic>>;
                     noOfQuestions = questionPaper.length;
                     return Expanded(
                       child: SingleChildScrollView(

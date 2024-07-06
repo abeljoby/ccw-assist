@@ -170,7 +170,7 @@ class _GeneratePaperState extends State<GenerateQuestionPaper> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Added test to schedule.'))
                     );
-                    Navigator.push(context, MaterialPageRoute(builder: ((context) => const ScheduledTests())));  
+                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: ((context) => const ScheduledTests())),ModalRoute.withName('/'));
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.indigo.shade700,

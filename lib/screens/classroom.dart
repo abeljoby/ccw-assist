@@ -19,14 +19,7 @@ class ClassroomState extends State<Classroom> {
         title: const Text('Classroom'),
         centerTitle: true,
         backgroundColor: Colors.amber,
-        //leading: IconButton(onPressed: (){}, icon: const Icon(Icons.arrow_back_sharp))
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     Navigator.pushNamed(context, '/qform');
-      //   },
-      //   child: const Icon(Icons.add),
-      // ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -34,7 +27,6 @@ class ClassroomState extends State<Classroom> {
           decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
           padding: const EdgeInsets.all(20),
           child: DropdownButtonFormField<String>(
-            // hint: const Text("Select"),
             value: _selectedOption,
             items: years.map((String year) {
               return DropdownMenuItem <String>(
@@ -68,8 +60,6 @@ class ClassroomState extends State<Classroom> {
                 shrinkWrap: true,
                 children: snapshot.data!.docs.map((DocumentSnapshot document) {
                   Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-                  // if((data["Question"] == ))
-                    // print(document.id);
                   return (data["batch"] != _selectedOption)?SizedBox.shrink():
                   Container(
                     padding: const EdgeInsets.all(8),

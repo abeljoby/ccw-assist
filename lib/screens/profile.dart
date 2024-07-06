@@ -32,7 +32,7 @@ class _ProfilePageState extends State<ProfilePage> {
     await FirebaseAuth.instance.signOut();
   }
 
-  @override 
+  @override
   void initState() {
     loadUserDetails();
     super.initState();
