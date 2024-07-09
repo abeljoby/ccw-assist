@@ -40,6 +40,7 @@ class GetTestsState extends State<GetTests> {
   late Stream<QuerySnapshot> _testStream;
   
   Widget _buildTestSection({
+    required String id,
     required String date,
     required String courseName,
     required String time,
@@ -85,7 +86,6 @@ class GetTestsState extends State<GetTests> {
     loadUserDetails();
     super.initState();
     _testStream = FirebaseFirestore.instance.collection('tests').where('StartDate',isLessThan: currentDate).orderBy('StartDate',descending: true).orderBy('StartTime',descending: true).snapshots();
-
   }
 
   void loadUserDetails() async {
@@ -116,7 +116,7 @@ class GetTestsState extends State<GetTests> {
           shrinkWrap: true,
           children: snapshot.data!.docs.map((DocumentSnapshot document) {
             Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-            return _buildTestSection(date: data["StartDate"], courseName: data["Course"], time: data["StartTime"], modules: data["Modules"].toString());
+            return _buildTestSection(id: document.id,date: data["StartDate"], courseName: data["Course"], time: data["StartTime"], modules: data["Modules"].toString());
           }).toList(),
         );
       },
