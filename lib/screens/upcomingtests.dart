@@ -16,8 +16,8 @@ class _UpcomingTestsState extends State<UpcomingTests> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Upcoming Tests'),
-        centerTitle: true,
+        title: const Text('Upcoming Tests',style: TextStyle(fontWeight: FontWeight.bold)),
+        // centerTitle: true,
         backgroundColor: Colors.amber,
       ),
       body: GetTests(),
@@ -74,41 +74,76 @@ class GetTestsState extends State<GetTests> {
   }
 
   Widget _buildTestSection(Map<String,dynamic> data, DocumentSnapshot document) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // if(!isOver(data['StartTime'], data['Duration'])) ...[
-              Text(data['StartDate'], style: const TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              Text(data['Course']),
-              Text(data['StartTime']),
-              Text("Modules ${data['Modules'].toString().substring(1, data['Modules'].toString().length - 1)}"),
-              const SizedBox(height: 16),
-              if(isValidTimeRange(data['StartTime'], data['Duration'])&&(currentDate == data['StartDate']))
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => TestScreen(id: document.id,data: data,email: emailID)),(Route<dynamic> route) => false);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.indigo,
-                        foregroundColor: Colors.white
-                      ),
-                      child: const Text('Attend Test'),
-                    ),
-                  ],
-                ),
-              const Divider(),
-            ]
-          // ],
+    String dateString = data["StartDate"];
+    // Parse the date string
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+    DateTime dateTime = dateFormat.parse(dateString);
+
+    // Get Day of week as string
+    DateFormat dayOfWeekFormat = DateFormat("EEEE"); // EEEE for full weekday name
+    String dayOfWeek = dayOfWeekFormat.format(dateTime);
+
+    // Format the date with desired output format
+    DateFormat monthYearFormat = DateFormat("d MMMM yyyy"); // d for day with no leading zero, MMMM for full month name
+    String formattedDate = monthYearFormat.format(dateTime);
+
+    // Combine day of week and formatted date
+    String dateHeading = "$dayOfWeek, $formattedDate";
+
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.only(left: 16,right: 16,top: 5,bottom: 5),
+          width: double.infinity,
+          color: Colors.black,
+          child: Text(dateHeading, style: const TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
         ),
-      ),
+        Container(
+          padding: const EdgeInsets.all(16),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // if(!isOver(data['StartTime'], data['Duration'])) ...[
+                  // Text(data['StartDate'], style: const TextStyle(fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 8),
+                  Text(data['Course'],style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(data['StartTime']),
+                  Text("Modules ${data['Modules'].toString().substring(1, data['Modules'].toString().length - 1)}"),
+                  const SizedBox(height: 16),
+                  if(isValidTimeRange(data['StartTime'], data['Duration'])&&(currentDate == data['StartDate'])) ...[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => TestScreen(id: document.id,data: data,email: emailID)),(Route<dynamic> route) => false);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.indigo,
+                            foregroundColor: Colors.white
+                          ),
+                          child: const Text('Attend Test'),
+                        ),
+                      ],
+                    ),
+                  ]
+                  else ... [
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    //   children: [
+                    //    const Text('Test upcoming', style: TextStyle(fontWeight: FontWeight.bold))
+                    //   ],
+                    // ),
+                    const Divider(),
+                  ],
+                ]
+              // ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 

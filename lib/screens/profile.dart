@@ -16,6 +16,7 @@ class _ProfilePageState extends State<ProfilePage> {
   late String? ktuID = '';
   late String? email = '';
   late String? dept = '';
+  late String? type = '';
 
   void loadUserDetails() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -25,6 +26,7 @@ class _ProfilePageState extends State<ProfilePage> {
       email = prefs.getString("email");
       dept = prefs.getString("dept");
       batch = prefs.getString("batch");
+      type = prefs.getString("userType");
     });
   }
 
@@ -42,16 +44,16 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:AppBar(
-        title: const Text('Profile'),
+        title: const Text('Profile', style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.amber,
-        actions: [
-          PopupMenuButton(
-            itemBuilder: ((context) =>  [
-            const PopupMenuItem(child: Text("Edit Profile")),
-            const PopupMenuItem(child: Text("More")),
-            ]),
-          )
-        ],
+        // actions: [
+        //   PopupMenuButton(
+        //     itemBuilder: ((context) =>  [
+        //     const PopupMenuItem(child: Text("Edit Profile")),
+        //     const PopupMenuItem(child: Text("More")),
+        //     ]),
+        //   )
+        // ],
       ),
       body: Center(
         child: Column(
@@ -68,9 +70,9 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(
               height: 20,
             ),
-            Text("$name",style: TextStyle(fontSize: 25),),
+            Text("$name",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
             const SizedBox(
-              height: 60,
+              height: 80,
             ),
             ListTile(
               title: Text("KTU ID: $ktuID",
@@ -85,12 +87,14 @@ class _ProfilePageState extends State<ProfilePage> {
               textColor: Colors.black,
             ),
       //      const Divider(),
-            ListTile(
-              title: Text("Batch: $batch",
-                style: TextStyle(fontSize: 15),
+            if(type == "Student") ... [
+              ListTile(
+                title: Text("Batch: $batch",
+                  style: TextStyle(fontSize: 15),
+                ),
+                textColor: Colors.black,
               ),
-              textColor: Colors.black,
-            ),
+            ],
           //  const Divider(),
             // const ListTile(
             //   title: Text("Username : 21BR14377",
@@ -105,9 +109,9 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               textColor: Colors.black,
             ),
-            const Divider(),
+            // const Divider(),
             const SizedBox(
-              height: 70,
+              height: 100,
             ),
             ElevatedButton(onPressed: () {
               logout();

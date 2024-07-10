@@ -16,8 +16,8 @@ class ClassroomState extends State<Classroom> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Classroom'),
-        centerTitle: true,
+        title: const Text('Classroom', style: TextStyle(fontWeight: FontWeight.bold)),
+        // centerTitle: true,
         backgroundColor: Colors.amber,
       ),
       body: Column(

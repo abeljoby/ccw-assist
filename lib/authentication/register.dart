@@ -27,24 +27,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Student Registration'),
-          centerTitle: true,
-          backgroundColor: Colors.amber,
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child:Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 10),
-                buildStudentFields()
-              ],
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Student Registration', style: TextStyle(fontWeight: FontWeight.bold)),
+        // centerTitle: true,
+        backgroundColor: Colors.amber,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child:Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 10),
+              buildStudentFields()
+            ],
           ),
         ),
       ),
@@ -245,7 +243,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           "userType": "Student"
         };
         db.collection("users").add(user).then((DocumentReference doc) => print('DocumentSnapshot added with ID: ${doc.id}'));
-        Navigator.pushNamed(context, '/login');
+        Navigator.pop(context);
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

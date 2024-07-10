@@ -21,8 +21,8 @@ class QBankState extends State<QBank> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Question Bank'),
-        centerTitle: true,
+        title: const Text('Question Bank',style: TextStyle(fontWeight: FontWeight.bold)),
+        // centerTitle: true,
         backgroundColor: Colors.amber,
         //leading: IconButton(onPressed: (){}, icon: const Icon(Icons.arrow_back_sharp))
       ),
@@ -100,16 +100,16 @@ class QBankState extends State<QBank> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                // Handle edit test action
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.indigo,
-                                foregroundColor: Colors.white
-                              ),
-                              child: const Text('Edit'),
-                            ),
+                            // ElevatedButton(
+                            //   onPressed: () {
+                            //     // Handle edit test action
+                            //   },
+                            //   style: ElevatedButton.styleFrom(
+                            //     backgroundColor: Colors.indigo,
+                            //     foregroundColor: Colors.white
+                            //   ),
+                            //   child: const Text('Edit'),
+                            // ),
                             ElevatedButton(
                               onPressed: () {
                                 // Handle delete test action

@@ -30,8 +30,8 @@ class _CreateTestState extends State<CreateTest> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Test'),
-        centerTitle: true,
+        title: const Text('Create Test', style: TextStyle(fontWeight: FontWeight.bold)),
+        // centerTitle: true,
         backgroundColor: Colors.amber,
         // leading: IconButton(onPressed: (){}, icon: const Icon(Icons.menu)),
       ),

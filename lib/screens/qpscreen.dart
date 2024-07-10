@@ -16,6 +16,8 @@ class TestScreen extends StatefulWidget {
 }
 
 class _TestScreenState extends State<TestScreen> with TickerProviderStateMixin {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   late Map<String,dynamic> testData = {};
   late List<String> answers = [];
   late String testID = "";
@@ -109,7 +111,7 @@ class _TestScreenState extends State<TestScreen> with TickerProviderStateMixin {
         index++;
         isPressed = false;
         isAlreadyanswers = false;
-        answers[index] = answers[index]=='R'?'R':'';
+        answers[index] = '';
       }); 
     }
   }
@@ -157,7 +159,7 @@ class _TestScreenState extends State<TestScreen> with TickerProviderStateMixin {
     int answered = 0;
     int unanswered = 0;
     int unvisited = 0;
-    int reviewed = 0;
+    // int reviewed = 0;
     for (var ques in questionpaper) {
       if(ques['CorrectOption'] == ans[ques['qno']-1]) {
         correct++;
@@ -166,9 +168,9 @@ class _TestScreenState extends State<TestScreen> with TickerProviderStateMixin {
       else if (ans[ques['qno']-1] == '') {
         unanswered++;
       }
-      else if (ans[ques['qno']-1] == 'R') {
-        reviewed++;
-      }
+      // else if (ans[ques['qno']-1] == 'R') {
+      //   reviewed++;
+      // }
       else if (ans[ques['qno']-1] == 'NV') {
         unvisited++;
       }
@@ -176,19 +178,22 @@ class _TestScreenState extends State<TestScreen> with TickerProviderStateMixin {
         answered++;
       }
     }
-    return [correct,answered,unanswered,unvisited,reviewed];
+    return [correct,answered,unanswered,unvisited];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
           '${testData['Course']}',
           style: TextStyle(fontSize: 18),
         ),
         backgroundColor: Colors.amber,
-        leading: IconButton(onPressed: () {}, icon: const Icon(Icons.menu)),
+        leading: IconButton(onPressed: () {
+          _scaffoldKey.currentState!.openDrawer();
+        }, icon: const Icon(Icons.menu)),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -386,38 +391,38 @@ class _TestScreenState extends State<TestScreen> with TickerProviderStateMixin {
                   ),
                 ),
               ),
-              Container(
-                height: 80, // Adjust the height as needed
-                color:
-                    Colors.indigo.shade700, // Background color for the header
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              // Handle "Question Paper" button press
-                            },
-                            style: ElevatedButton.styleFrom(
-                                fixedSize: const Size(150, 50)),
-                            child: const Text('Question Paper'),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              // Handle "Instructions" button press
-                            },
-                            style: ElevatedButton.styleFrom(
-                                fixedSize: const Size(150, 50)),
-                            child: const Text('Instructions'),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
+              // Container(
+              //   height: 80, // Adjust the height as needed
+              //   color:
+              //       Colors.indigo.shade700, // Background color for the header
+              //   child: Center(
+              //     child: Column(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       children: [
+              //         Row(
+              //           children: [
+              //             ElevatedButton(
+              //               onPressed: () {
+              //                 // Handle "Question Paper" button press
+              //               },
+              //               style: ElevatedButton.styleFrom(
+              //                   fixedSize: const Size(150, 50)),
+              //               child: const Text('Question Paper'),
+              //             ),
+              //             ElevatedButton(
+              //               onPressed: () {
+              //                 // Handle "Instructions" button press
+              //               },
+              //               style: ElevatedButton.styleFrom(
+              //                   fixedSize: const Size(150, 50)),
+              //               child: const Text('Instructions'),
+              //             ),
+              //           ],
+              //         )
+              //       ],
+              //     ),
+              //   ),
+              // ),
               const ListTile(
                 title: Text(
                   'Questions',
@@ -445,13 +450,13 @@ class _TestScreenState extends State<TestScreen> with TickerProviderStateMixin {
                 visualDensity: VisualDensity(
                     vertical: -4), // Adjust the vertical density
               ),
-              const ListTile(
-                leading: CircleAvatar(backgroundColor: Colors.purpleAccent),
-                title: Text('Marked for review'),
-                dense: true, // Set dense to true for compact spacing
-                visualDensity: VisualDensity(
-                    vertical: -4), // Adjust the vertical density
-              ),
+              // const ListTile(
+              //   leading: CircleAvatar(backgroundColor: Colors.purpleAccent),
+              //   title: Text('Marked for review'),
+              //   dense: true, // Set dense to true for compact spacing
+              //   visualDensity: VisualDensity(
+              //       vertical: -4), // Adjust the vertical density
+              // ),
               GridView.count(
                 shrinkWrap: true,
                 crossAxisCount: 5,
@@ -483,15 +488,15 @@ class _TestScreenState extends State<TestScreen> with TickerProviderStateMixin {
               icon: Icon(Icons.arrow_back),
               color: Colors.white,
             ),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  answers[index] = 'R';
-                  nextQuestion(noOfQuestions);
-                });
-              },
-              child: Text('Review'),
-            ),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     setState(() {
+            //       answers[index] = 'R';
+            //       nextQuestion(noOfQuestions);
+            //     });
+            //   },
+            //   child: Text('Review'),
+            // ),
             ElevatedButton(
               onPressed: () {
                 setState(() {
@@ -523,8 +528,8 @@ class _TestScreenState extends State<TestScreen> with TickerProviderStateMixin {
     Color color = Colors.grey;
     if (answers[number-1] == '') {
       color = Colors.red; // Not Answered
-    } else if (answers[number-1] == 'R') {
-      color = Colors.purpleAccent; // Marked for Review
+    // } else if (answers[number-1] == 'R') {
+    //   color = Colors.purpleAccent; // Marked for Review
     } else if (answers[number-1] == 'NV'){
       color = Colors.grey; // Not Visited
     } else /* if ((answers[number-1] != '')&&(answers[number-1] != 'NV')&&(answers[number-1] != 'R')) */{
@@ -533,7 +538,10 @@ class _TestScreenState extends State<TestScreen> with TickerProviderStateMixin {
     return InkWell(
       onTap: () {
         // Handle circle click
-        //   print('Clicked on question $number');
+        setState(() {
+          index = number - 1;
+          answers[index] = '';
+      }); 
       },
       child: Container(
         margin: const EdgeInsets.all(4),

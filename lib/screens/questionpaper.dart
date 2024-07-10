@@ -34,7 +34,7 @@ class _QuestionPaperState extends State<QuestionPaper> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Question Paper', style: TextStyle(color: Colors.yellow)),
-        centerTitle: true,
+        // centerTitle: true,
         iconTheme: const IconThemeData(
           color: Colors.yellow, //change your color here
         ),

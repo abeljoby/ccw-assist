@@ -17,6 +17,8 @@ class QuestionFormState extends State<QuestionForm> {
   String? Module;
   String? Question;
 
+  bool isRadioSelected = false;
+
   final courses = {'DMS':'Discrete Mathematical Structures', 'DS':'Data Structures','COA':'Computer Organization and Architecture', 'DBMS':'DataBase Management Systems', 'OS':'Operating Systems', 'FLAT':'Formal Languages and Automata Theory'};
   final modules = {"1":1,"2":2,"3":3,"4":4,"5":5};
 
@@ -28,7 +30,7 @@ class QuestionFormState extends State<QuestionForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add question', style: TextStyle(color: Colors.yellow)),
+        title: const Text('Add question', style: TextStyle(color: Colors.yellow,)),
         iconTheme: const IconThemeData(
           color: Colors.yellow, //change your color here
         ),
@@ -131,6 +133,7 @@ class QuestionFormState extends State<QuestionForm> {
           value: "Option1", groupValue: CorrectOption,
           onChanged: (String? value) {
             setState(() {
+              isRadioSelected = true;
               CorrectOption = value;
             });
           },
@@ -156,6 +159,7 @@ class QuestionFormState extends State<QuestionForm> {
           value: "Option2", groupValue: CorrectOption,
           onChanged: (String? value) {
             setState(() {
+              isRadioSelected = true;
               CorrectOption = value;
             });
           }
@@ -181,6 +185,7 @@ class QuestionFormState extends State<QuestionForm> {
           value: "Option3", groupValue: CorrectOption,
           onChanged: (String? value) {
             setState(() {
+              isRadioSelected = true;
               CorrectOption = value;
             });
           }
@@ -206,6 +211,7 @@ class QuestionFormState extends State<QuestionForm> {
           value: "Option4", groupValue: CorrectOption,
           onChanged: (String? value) {
             setState(() {
+              isRadioSelected = true;
               CorrectOption = value;
             });
           }
@@ -218,21 +224,29 @@ class QuestionFormState extends State<QuestionForm> {
           ),
           onPressed: () {
             if (_formKey.currentState!.validate()) {
+              if (isRadioSelected) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Added to question bank.')),
+                );
+                final question = <String, dynamic>{
+                  "Question": Question,
+                  "Course": Course,
+                  "Module": modules[Module],
+                  "CorrectOption": CorrectOption,
+                  "Option1": Option1,
+                  "Option2": Option2,
+                  "Option3": Option3,
+                  "Option4": Option4,
+                  "Difficulty": ""
+                };
+                db.collection("question-bank").add(question).then((DocumentReference doc) => print('DocumentSnapshot added with ID: ${doc.id}'));
+                Navigator.popAndPushNamed(context, '/currentRoute');
+              }
+              else {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Added to question bank.')),
-              );
-              final question = <String, dynamic>{
-                "Question": Question,
-                "Course": Course,
-                "Module": modules[Module],
-                "CorrectOption": CorrectOption,
-                "Option1": Option1,
-                "Option2": Option2,
-                "Option3": Option3,
-                "Option4": Option4,
-                "Difficulty": ""
-              };
-              db.collection("question-bank").add(question).then((DocumentReference doc) => print('DocumentSnapshot added with ID: ${doc.id}'));
+                  const SnackBar(content: Text('Select a correct option.')),
+                );
+              }
             }
           },
           child: const Text('Submit'),

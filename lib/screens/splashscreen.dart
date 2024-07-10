@@ -34,19 +34,20 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
         width: double.infinity,
         decoration: const BoxDecoration(
             gradient: LinearGradient(
-                colors: [Colors.pink, Colors.yellow],
+                colors: [Colors.black, Colors.black],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter)),
         child: const Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.book, size: 80),
+            const Image(image: AssetImage('images/ccwassisticon.jpg')),
+            // Icon(Icons.book, size: 80),
             Text(
               "CCW ASSIST",
               style: TextStyle(
                   fontSize: 50,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFFF2F2CB)),
+                  color: Colors.amber),
             )
           ]
         ),

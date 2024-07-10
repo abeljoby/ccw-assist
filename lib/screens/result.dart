@@ -19,7 +19,7 @@ class _ResultPageState extends State<ResultPage> {
   late int answered = 0;
   late int unanswered = 0;
   late int unvisited = 0;
-  late int reviewed = 0;
+  // late int reviewed = 0;
 
   late Map<String,dynamic> testData = {};
   late String testID = '';
@@ -52,7 +52,7 @@ class _ResultPageState extends State<ResultPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Test Result'),
+        title: const Text('Test Result',style: TextStyle(fontWeight: FontWeight.bold),),
         backgroundColor: Colors.amber,
       ),
       body: FutureBuilder(
@@ -74,7 +74,7 @@ class _ResultPageState extends State<ResultPage> {
             answered = result[1];
             unanswered = result[2];
             unvisited = result[3];
-            reviewed = result[4];
+            // reviewed = result[4];
             var noOfQuestions = questionPaper.length;
             return Center(
               child: Column(
@@ -140,13 +140,13 @@ class _ResultPageState extends State<ResultPage> {
                     title: const Text('Not Visited'),
                     dense: true, // Set dense to true for compact spacing
                   ),
-                  ListTile(
-                    leading: CircleAvatar(
-                        backgroundColor: Colors.purpleAccent,
-                        child: Text('$reviewed')),
-                    title: const Text('Marked for review'),
-                    dense: true, // Set dense to true for compact spacing
-                  ),
+                  // ListTile(
+                  //   leading: CircleAvatar(
+                  //       backgroundColor: Colors.purpleAccent,
+                  //       child: Text('$reviewed')),
+                  //   title: const Text('Marked for review'),
+                  //   dense: true, // Set dense to true for compact spacing
+                  // ),
                   const Divider(),
                   const SizedBox(height: 10),
                   Padding(

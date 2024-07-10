@@ -81,7 +81,7 @@ class _CorrectedQuestionPaperState extends State<CorrectedQuestionPaper> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('Date: ${dataCopy["StartDate"]} ${dataCopy["StartTime"]}\nName: $name\nCourse: ${dataCopy["Course"]}\nModules: ${dataCopy["Modules"].toString().substring(1, dataCopy['Modules'].toString().length - 1)}\nResult: ${result[0]}/${result[1]+result[2]+result[3]+result[4]}',textAlign:TextAlign.center,style: TextStyle(color: Colors.black,)),                // Add more details as needed
+                Text('Date: ${dataCopy["StartDate"]} ${dataCopy["StartTime"]}\nName: $name\nCourse: ${dataCopy["Course"]}\nModules: ${dataCopy["Modules"].toString().substring(1, dataCopy['Modules'].toString().length - 1)}\nResult: ${result[0]}/${result[1]+result[2]+result[3]}',textAlign:TextAlign.center,style: TextStyle(color: Colors.black,)),                // Add more details as needed
               ],
             ),
           ),
@@ -113,7 +113,7 @@ class _CorrectedQuestionPaperState extends State<CorrectedQuestionPaper> {
                             const SizedBox(height: 8),
                             if(ques['CorrectOption'] == answers[ques['qno']-1]) ...[
                             Text("Answered Option: ${answers[ques['qno']-1].substring(6)}",style: TextStyle(color: Colors.green))
-                            ] else if(answers[ques['qno']-1] == '' || answers[ques['qno']-1] == 'R' || answers[ques['qno']-1] == 'NV') ... [
+                            ] else if(answers[ques['qno']-1] == '' || answers[ques['qno']-1] == 'NV') ... [
                             Text("Did not answer",style: TextStyle(color: Colors.red)),
                             ] else ... [
                             Text("Answered Option: ${answers[ques['qno']-1].substring(6)}",style: TextStyle(color: Colors.red)),

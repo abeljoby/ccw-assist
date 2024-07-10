@@ -7,7 +7,6 @@ import 'package:ccwassist/screens/qbank.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'upcomingtests.dart';
-import 'testhistory.dart';
 import 'feedback.dart';
 import 'profile.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -65,26 +64,15 @@ class _HomeTeacherState extends State<HomeTeacher> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home Teacher'),
-        // leading: 
-        //    PopupMenuButton(icon: const Icon(Icons.menu),
-        //     itemBuilder: ((context) => [
-        //           const PopupMenuItem(child: Text("About")),
-        //         //  const PopupMenuItem(child: Text("Feedback")),
-        //           const PopupMenuItem(child: Text("Change Password")),
-        //           PopupMenuItem(
-        //             child: Text("Logout"),
-        //             onTap: () => logout,
-        //           ),
-        //         ]),
-        //   ),
+        title: const Text('Teacher Home', style: TextStyle(fontWeight: FontWeight.bold)),
         actions: [
           IconButton(onPressed: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: ((context) => const ProfilePage())));
-          }, icon: const Icon(Icons.person_rounded),tooltip: 'View Profile'),
+          }, icon: const Icon(Icons.person_rounded,color: Colors.black,size: 30,),
+          tooltip:'View Profile'),
         ],
         backgroundColor: Colors.amber,
         automaticallyImplyLeading: false,
@@ -103,115 +91,145 @@ class _HomeTeacherState extends State<HomeTeacher> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                 Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Card(              
-                      color: Colors.amber,
-                      shadowColor: Colors.black,
-                      elevation: 7,
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 80,
-                            width: 150,
-                            child: ListTile(
-                              title: const Text('Create New Test',style: TextStyle(fontSize: 19),textAlign: TextAlign.center,),
-                              onTap: () {
-                                Navigator.push(context,MaterialPageRoute(builder: ((context) => const CreateTest())));
-                              },
+                  padding: const EdgeInsets.all(15.0),
+                  child: Material(
+                    color: Colors.amber,
+                    elevation: 7.0,
+                    borderRadius: BorderRadius.circular(20),
+                    child: SizedBox( // Set specific height and width
+                      height: 80.0,
+                      width: 160.0,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(context,MaterialPageRoute(builder: ((context) => const CreateTest())));
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Center(
+                            child: Text(
+                              'Create New Test',
+                              style: TextStyle(fontSize: 19.0),
+                              textAlign: TextAlign.center
                             ),
                           ),
-                        ],
-                      )),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Card(
-                      color: Colors.amber,
-                      shadowColor: Colors.black,
-                      elevation: 7,
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 80,
-                            width: 150,
-                            child: ListTile(
-                              title: const Text('Classrooms',style: TextStyle(fontSize: 19),textAlign: TextAlign.center),
-                              onTap: () {
-                                Navigator.push(context,MaterialPageRoute(builder: ((context) => const Classroom())));
-                              },
-                            ),
-                          )
-                        ],
-                      )),
+                padding: const EdgeInsets.all(15.0),
+                child: Material(
+                  color: Colors.amber,
+                  elevation: 7.0,
+                  borderRadius: BorderRadius.circular(20),
+                  child: SizedBox( // Set specific height and width
+                    height: 80.0,
+                    width: 160.0,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(context,MaterialPageRoute(builder: ((context) => const Classroom())));
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Center(
+                          child: Text(
+                            'Classrooms',
+                            style: TextStyle(fontSize: 19.0),
+                            textAlign: TextAlign.center
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
+              ),
               ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                 Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Card(              
-                      color: Colors.amber,
-                      shadowColor: Colors.black,
-                      elevation: 7,
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 80,
-                            width: 150,
-                            child: ListTile(
-                              title: const Text('Scheduled Tests',style: TextStyle(fontSize: 19),textAlign: TextAlign.center,),
-                              onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: ((context) => const ScheduledTests())));                               
-                              },
+                  padding: const EdgeInsets.all(15.0),
+                  child: Material(
+                    color: Colors.amber,
+                    elevation: 7.0,
+                    borderRadius: BorderRadius.circular(20),
+                    child: SizedBox( // Set specific height and width
+                      height: 80.0,
+                      width: 160.0,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: ((context) => const ScheduledTests())));
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Center(
+                            child: Text(
+                              'Scheduled Tests',
+                              style: TextStyle(fontSize: 19.0),
+                              textAlign: TextAlign.center
                             ),
                           ),
-                        ],
-                      )),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Card(
-                      color: Colors.amber,
-                      shadowColor: Colors.black,
-                      elevation: 7,
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 80,
-                            width: 150,
-                            child: ListTile(
-                              title: const Text('Question Bank',style: TextStyle(fontSize: 19),textAlign: TextAlign.center),
-                              onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: ((context) => const QBank())));
-                              },
+                  padding: const EdgeInsets.all(15.0),
+                  child: Material(
+                    color: Colors.amber,
+                    elevation: 7.0,
+                    borderRadius: BorderRadius.circular(20),
+                    child: SizedBox( // Set specific height and width
+                      height: 80.0,
+                      width: 160.0,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: ((context) => const QBank())));
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Center(
+                            child: Text(
+                              'Question Bank',
+                              style: TextStyle(fontSize: 19.0),
+                              textAlign: TextAlign.center
                             ),
-                          )
-                        ],
-                      )),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
+                ),
                 ],
               ),           
-              // Padding(
-              //   padding: const EdgeInsets.all(15.0),
-              //   child: Card(
-              //       color: Colors.amber,
-              //       shadowColor: Colors.black,
-              //       elevation: 7,
-              //       child: Column(
-              //         children: [
-              //           SizedBox(
-              //             height: 80,
-              //             width: 345,
-              //             child: ListTile(
-              //               title: const Text('Student Performance',style: TextStyle(fontSize: 19),textAlign: TextAlign.center),
-              //               onTap: () {},
-              //             ),
-              //           )
-              //         ],
-              //       )),
-              // ),
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Material(
+                  color: Colors.amber,
+                  elevation: 7.0,
+                  borderRadius: BorderRadius.circular(20),
+                  child: SizedBox( // Set specific height and width
+                    height: 80.0,
+                    width: 345.0,
+                    child: InkWell(
+                      onTap: () {},
+                      child: const Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Center(
+                          child: Text(
+                            'Student Performance',
+                            style: TextStyle(fontSize: 19.0),
+                            textAlign: TextAlign.center
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
