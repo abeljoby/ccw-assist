@@ -53,10 +53,10 @@ class _StudentResultState extends State<StudentResult> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Test Result', style: TextStyle(color: Colors.yellow)),
+        title: const Text('Test Result', style: TextStyle(color: Colors.amber)),
         // centerTitle: true,
         iconTheme: const IconThemeData(
-          color: Colors.yellow, //change your color here
+          color: Colors.amber, //change your color here
         ),
         backgroundColor: Colors.black,
       ),
@@ -125,7 +125,7 @@ class _StudentResultState extends State<StudentResult> {
             return Text('Error: ${snapshot.error}');
           }
           else {
-            return CircularProgressIndicator();
+            return Center(child:SizedBox(width: 30, height: 30, child: CircularProgressIndicator()));
           }
         }
       )

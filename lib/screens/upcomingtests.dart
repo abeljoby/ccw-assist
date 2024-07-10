@@ -155,18 +155,21 @@ class GetTestsState extends State<GetTests> {
         if (snapshot.hasError) {
           return Text('Something went wrong');
         }
-
-        if (snapshot.connectionState == ConnectionState.waiting) {
+        if (!snapshot.hasData) {
           return Center(child:SizedBox(width: 30, height: 30, child: CircularProgressIndicator()));
         }
-
-        return ListView(
-          shrinkWrap: true,
-          children: snapshot.data!.docs.map((DocumentSnapshot document) {
+        else if (snapshot.data?.size == 0) {
+          return Center(child: Text("No tests coming up.",));
+        }
+        else {
+          return ListView(
+            shrinkWrap: true,
+            children: snapshot.data!.docs.map((DocumentSnapshot document) {
             Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
             return _buildTestSection(data,document);
-          }).toList(),
-        );
+            }).toList(),
+          );
+        }
       },
     );
   }

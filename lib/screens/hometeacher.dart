@@ -1,4 +1,5 @@
 import 'package:ccwassist/screens/homewrapper.dart';
+import 'package:ccwassist/screens/studentperformance.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ccwassist/screens/classroom.dart';
 import 'package:ccwassist/screens/scheduledtests.dart';
@@ -98,7 +99,7 @@ class _HomeTeacherState extends State<HomeTeacher> {
                     borderRadius: BorderRadius.circular(20),
                     child: SizedBox( // Set specific height and width
                       height: 80.0,
-                      width: 160.0,
+                      width: 150.0,
                       child: InkWell(
                         onTap: () {
                           Navigator.push(context,MaterialPageRoute(builder: ((context) => const CreateTest())));
@@ -125,7 +126,7 @@ class _HomeTeacherState extends State<HomeTeacher> {
                   borderRadius: BorderRadius.circular(20),
                   child: SizedBox( // Set specific height and width
                     height: 80.0,
-                    width: 160.0,
+                    width: 150.0,
                     child: InkWell(
                       onTap: () {
                         Navigator.push(context,MaterialPageRoute(builder: ((context) => const Classroom())));
@@ -157,7 +158,7 @@ class _HomeTeacherState extends State<HomeTeacher> {
                     borderRadius: BorderRadius.circular(20),
                     child: SizedBox( // Set specific height and width
                       height: 80.0,
-                      width: 160.0,
+                      width: 150.0,
                       child: InkWell(
                         onTap: () {
                           Navigator.push(context, MaterialPageRoute(builder: ((context) => const ScheduledTests())));
@@ -184,7 +185,7 @@ class _HomeTeacherState extends State<HomeTeacher> {
                     borderRadius: BorderRadius.circular(20),
                     child: SizedBox( // Set specific height and width
                       height: 80.0,
-                      width: 160.0,
+                      width: 150.0,
                       child: InkWell(
                         onTap: () {
                           Navigator.push(context, MaterialPageRoute(builder: ((context) => const QBank())));
@@ -215,7 +216,10 @@ class _HomeTeacherState extends State<HomeTeacher> {
                     height: 80.0,
                     width: 345.0,
                     child: InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: ((context) => const StudentPerformance())));
+                      },
                       child: const Padding(
                         padding: EdgeInsets.all(10.0),
                         child: Center(

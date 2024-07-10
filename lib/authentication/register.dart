@@ -10,7 +10,6 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
-
   final _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
   final name = TextEditingController();
@@ -231,23 +230,33 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   void _register(BuildContext context, String mail, String pass) async {
     if (_formKey.currentState!.validate()) {
-      try {
-        final cred = await _auth.createUserWithEmailAndPassword(email: mail,password: pass);
-        final user = <String, dynamic>{
-          "batch": acdyr,
-          "dept": "Computer Science and Engineering",
-          "email": email.text,
-          "ktuID": ktuid.text,
-          "name": name.text,
-          "uid": cred.user?.uid,
-          "userType": "Student"
-        };
-        db.collection("users").add(user).then((DocumentReference doc) => print('DocumentSnapshot added with ID: ${doc.id}'));
-        Navigator.pop(context);
-      } on FirebaseAuthException catch (e) {
+      var studentSnapshot = await FirebaseFirestore.instance.collection("users").where("ktuID",isEqualTo: ktuid.text).get();
+      if(studentSnapshot.docs.isEmpty) {
+        try {
+          final cred = await _auth.createUserWithEmailAndPassword(email: mail,password: pass);
+          final user = <String, dynamic>{
+            "batch": acdyr,
+            "dept": "Computer Science and Engineering",
+            "email": email.text,
+            "ktuID": ktuid.text,
+            "name": name.text,
+            "uid": cred.user?.uid,
+            "userType": "Student"
+          };
+          db.collection("users").add(user).then((DocumentReference doc) => print('DocumentSnapshot added with ID: ${doc.id}'));
+          Navigator.pop(context);
+        } on FirebaseAuthException catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(e.toString()),
+            ),
+          );
+        }
+      }
+      else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(e.toString()),
+            content: Text("An account already exists with the same KTU ID."),
           ),
         );
       }

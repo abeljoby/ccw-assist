@@ -30,6 +30,9 @@ class QBankState extends State<QBank> {
         onPressed: () {
           Navigator.pushNamed(context, '/qform');
         },
+        shape: const CircleBorder(),
+        backgroundColor: Colors.amber,
+        foregroundColor: Colors.black,
         child: const Icon(Icons.add),
       ),
       body: Column(
