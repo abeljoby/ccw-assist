@@ -1,3 +1,4 @@
+import 'package:ccwassist/screens/studentclassroom.dart';
 import 'package:ccwassist/screens/homewrapper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -117,6 +118,65 @@ class _HomeStudentState extends State<HomeStudent> {
                   ),
                 ),
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Material(
+                    color: Colors.amber,
+                    elevation: 7.0,
+                    borderRadius: BorderRadius.circular(20),
+                    child: SizedBox( // Set specific height and width
+                      height: 80.0,
+                      width: 150.0,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: ((context) => const StudentClassroom())));
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Center(
+                            child: Text(
+                              'Classrooms',
+                              style: TextStyle(fontSize: 19.0),
+                              textAlign: TextAlign.center
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Material(
+                    color: Colors.amber,
+                    elevation: 7.0,
+                    borderRadius: BorderRadius.circular(20),
+                    child: SizedBox( // Set specific height and width
+                      height: 80.0,
+                      width: 150.0,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: ((context) => const Courses())));
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Center(
+                            child: Text(
+                              'Courses',
+                              style: TextStyle(fontSize: 19.0),
+                              textAlign: TextAlign.center
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                ],
+              ),
               Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Material(
@@ -148,40 +208,20 @@ class _HomeStudentState extends State<HomeStudent> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Material(
-                  color: Colors.amber,
-                  elevation: 7.0,
-                  borderRadius: BorderRadius.circular(20),
-                  child: SizedBox( // Set specific height and width
-                    height: 80.0,
-                    width: 345.0,
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: ((context) =>
-                                  const Courses())));
-                      },
-                      child: const Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Center(
-                          child: Text(
-                            'Courses',
-                            style: TextStyle(fontSize: 19.0),
-                            textAlign: TextAlign.center
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.pushNamed(context, '/joinclass');
+        },
+        label: Text('Join classroom'),
+        // shape: const CircleBorder(),
+        backgroundColor: Colors.black,
+        foregroundColor: Colors.amber,
+        icon: const Icon(Icons.add),
       ),
     );
   }

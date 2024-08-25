@@ -17,7 +17,7 @@ class _ScheduledTestsState extends State<ScheduledTests> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Scheduled Tests',style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text("Today's Scheduled Tests",style: TextStyle(fontWeight: FontWeight.bold)),
         // centerTitle: true,
         backgroundColor: Colors.amber,
       ),
@@ -122,8 +122,8 @@ class GetTestsState extends State<GetTests> {
                         showDialog(
                           context: context,
                           builder: (_) => AlertDialog(
-                            title: Text('Confirm delete'),
-                            content: Text('Are you sure you want to delete this test?'),
+                            title: Text('Confirm deletion'),
+                            content: Text('Are you sure you want to delete this test? Results will also be deleted.'),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () {

@@ -9,8 +9,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // bool isStudent = true; // Initially set to student registration
-  
   final _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
   final _email = TextEditingController();
@@ -22,28 +20,6 @@ class _LoginPageState extends State<LoginPage> {
     _email.dispose();
     _password.dispose();
   }
-
-  // Color StudentColorButton = Colors.black;
-  // Color TeacherColorButton = Colors.white;
-  // Color StudentTextButton = Colors.white;
-  // Color TeacherTextButton = Colors.purple;
-  // void clrchg() {
-  //   setState(() {
-  //     if (isStudent == true) {
-  //       StudentColorButton = Colors.black;
-  //       TeacherColorButton = Colors.white;
-
-  //       StudentTextButton = Colors.white;
-  //       TeacherTextButton = Colors.purple;
-  //     } else {
-  //       StudentColorButton = Colors.white;
-  //       TeacherColorButton = Colors.black;
-
-  //       StudentTextButton = Colors.purple;
-  //       TeacherTextButton = Colors.white;
-  //     }
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -113,8 +89,6 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           const SizedBox(height: 40),
-          // TextButton(
-          //     onPressed: () {}, child: const Text('Forgot Password ?')),
         ],
       )
     );

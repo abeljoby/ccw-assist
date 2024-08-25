@@ -1,3 +1,4 @@
+
 import 'package:ccwassist/screens/qpscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -34,6 +35,11 @@ class GetTestsState extends State<GetTests> {
   late String currentDate = '';
   late String currentTime = '';
   late String emailID = '';
+  late String? name = '';
+  late String? batch = '';
+  late String? ktuID = '';
+  late String? email = '';
+  late String? dept = '';
   late Stream<QuerySnapshot> _testStream;
   
   @override
@@ -49,7 +55,13 @@ class GetTestsState extends State<GetTests> {
 
   void loadUserDetails() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    emailID = prefs.getString("email")!;
+    setState(() {
+      name = prefs.getString("name");
+      ktuID = prefs.getString("ktuID");
+      email = prefs.getString("email");
+      dept = prefs.getString("dept");
+      batch = prefs.getString("batch");
+    });
   }
 
   bool isValidTimeRange(String start, String duration) {
@@ -63,15 +75,42 @@ class GetTestsState extends State<GetTests> {
         && ((now.hour < endTime.hour) || (now.hour == endTime.hour && now.minute <= endTime.minute));
   }
 
-  bool isOver(String start, String duration) {
-    TimeOfDay startTime = TimeOfDay(hour: int.parse(start.substring(0,2)), minute: int.parse(start.substring(3,5)));
-    int addedminutes = int.parse(duration.substring(0,2));
-    int newminutes = (startTime.minute + addedminutes)%60;
-    int newhour = startTime.hour + (startTime.minute + addedminutes)~/60;
-    TimeOfDay endTime = TimeOfDay(hour: newhour, minute: newminutes);
-    TimeOfDay now = TimeOfDay.now();
-    return ((now.hour > endTime.hour) || (now.hour == endTime.hour && now.minute >= endTime.minute));
+  // Future<bool> isNotAttended() async {
+
+  //   return true;
+  // }
+
+  Future<bool> isAttended(DocumentSnapshot document) async {
+    try {
+      print(document.id);
+      print(ktuID);
+      var collectionRef = FirebaseFirestore.instance.collection('tests').doc(document.id).collection('results');
+      var doc = await collectionRef.doc(ktuID).get();
+      return doc.exists;
+    } catch (e) {
+    throw e;
+    }
   }
+  // bool isStarted(String start, String duration) {
+  //   TimeOfDay startTime = TimeOfDay(hour: int.parse(start.substring(0,2)), minute: int.parse(start.substring(3,5)));
+  //   int addedminutes = int.parse(duration.substring(0,2));
+  //   int newminutes = (startTime.minute + addedminutes)%60;
+  //   int newhour = startTime.hour + (startTime.minute + addedminutes)~/60;
+  //   TimeOfDay endTime = TimeOfDay(hour: newhour, minute: newminutes);
+  //   TimeOfDay now = TimeOfDay.now();
+  //   return ((now.hour > startTime.hour) || (now.hour == startTime.hour && now.minute >= startTime.minute))
+  //       && ((now.hour < endTime.hour) || (now.hour == endTime.hour && now.minute <= endTime.minute));
+  // }
+  //
+  // bool isOver(String start, String duration) {
+  //   TimeOfDay startTime = TimeOfDay(hour: int.parse(start.substring(0,2)), minute: int.parse(start.substring(3,5)));
+  //   int addedminutes = int.parse(duration.substring(0,2));
+  //   int newminutes = (startTime.minute + addedminutes)%60;
+  //   int newhour = startTime.hour + (startTime.minute + addedminutes)~/60;
+  //   TimeOfDay endTime = TimeOfDay(hour: newhour, minute: newminutes);
+  //   TimeOfDay now = TimeOfDay.now();
+  //   return ((now.hour > endTime.hour) || (now.hour == endTime.hour && now.minute >= endTime.minute));
+  // }
 
   Widget _buildTestSection(Map<String,dynamic> data, DocumentSnapshot document) {
     String dateString = data["StartDate"];
@@ -112,32 +151,47 @@ class GetTestsState extends State<GetTests> {
                   Text(data['StartTime']),
                   Text("Modules ${data['Modules'].toString().substring(1, data['Modules'].toString().length - 1)}"),
                   const SizedBox(height: 16),
-                  if(isValidTimeRange(data['StartTime'], data['Duration'])&&(currentDate == data['StartDate'])) ...[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => TestScreen(id: document.id,data: data,email: emailID)),(Route<dynamic> route) => false);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.indigo,
-                            foregroundColor: Colors.white
-                          ),
-                          child: const Text('Attend Test'),
-                        ),
-                      ],
-                    ),
-                  ]
-                  else ... [
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //   children: [
-                    //    const Text('Test upcoming', style: TextStyle(fontWeight: FontWeight.bold))
-                    //   ],
-                    // ),
-                    const Divider(),
-                  ],
+                  FutureBuilder(
+                    future: isAttended(document),
+                    builder: (context, snapshot) {
+                      print(snapshot.data);
+                      if (snapshot.hasData) {
+                        if(snapshot.data == true) {
+                          return const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text('Test attended', style: TextStyle(fontWeight: FontWeight.bold)),
+                            ],
+                          );
+                        }
+                        else {
+                          if(isValidTimeRange(data['StartTime'], data['Duration'])&&(currentDate == data['StartDate'])) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => TestScreen(id: document.id,data: data,email: emailID)),(Route<dynamic> route) => false);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.indigo,
+                                    foregroundColor: Colors.white
+                                  ),
+                                  child: const Text('Attend Test'),
+                                ),
+                              ],
+                            );
+                          }
+                          else {
+                            return const Divider();
+                          }
+                        }
+                      }
+                      else {
+                        return const CircularProgressIndicator();
+                      }
+                    }
+                  )
                 ]
               // ],
             ),

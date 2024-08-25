@@ -17,7 +17,6 @@ class _GeneratePaperState extends State<GenerateQuestionPaper> {
 
   Future<List<Map<String,dynamic>>> generateQuestionPaper(Map<String,dynamic> dataCopy) async {
     late List<String> requiredModules = dataCopy["Modules"];
-    print(requiredModules.toString());
     final QuerySnapshot<Map<String, dynamic>> snapshot = 
     await FirebaseFirestore.instance.collection("question-bank")
     .where("Course",isEqualTo: dataCopy["Course"])
@@ -30,7 +29,6 @@ class _GeneratePaperState extends State<GenerateQuestionPaper> {
     int questionsPerModule = totalQuestions ~/ requiredModules.length;
     // Calculate number of extra questions
     int extraQuestions = totalQuestions % requiredModules.length;
-    print(extraQuestions);
     // Shuffle the questions
     courseQuestions.shuffle();
     List<Map<String,dynamic>> selectedQuestions = [];

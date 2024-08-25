@@ -1,7 +1,7 @@
 import 'package:ccwassist/screens/homewrapper.dart';
 import 'package:ccwassist/screens/studentperformance.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:ccwassist/screens/classroom.dart';
+import 'package:ccwassist/screens/teacherclassroom.dart';
 import 'package:ccwassist/screens/scheduledtests.dart';
 import 'package:ccwassist/screens/createtest.dart';
 import 'package:ccwassist/screens/qbank.dart';
@@ -45,8 +45,8 @@ class _HomeTeacherState extends State<HomeTeacher> {
   void storeUserDetails() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      prefs.setString("batch", userDetails["batch"]);
-      prefs.setString("dept", userDetails["dept"]);
+      // prefs.setString("batch", userDetails["batch"]);
+      // prefs.setString("dept", userDetails["dept"]);
       prefs.setString("email", userDetails["email"]);
       prefs.setString("ktuID", userDetails["ktuID"]);
       prefs.setString("name", userDetails["name"]);
@@ -237,6 +237,17 @@ class _HomeTeacherState extends State<HomeTeacher> {
             ],
           ),
         ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.pushNamed(context, '/createclass');
+        },
+        label: Text('Create classroom'),
+        // shape: const CircleBorder(),
+        backgroundColor: Colors.black,
+        foregroundColor: Colors.amber,
+        icon: const Icon(Icons.add),
       ),
     );
   }

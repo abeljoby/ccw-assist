@@ -18,9 +18,30 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final userid = TextEditingController();
   final password = TextEditingController();
   final confirmpassword = TextEditingController();
-  final years = ['2023-24', '2024-25', '2025-26', '2026-27', '2027-28'];
+  // final years = ['2023-24', '2024-25', '2025-26', '2026-27', '2027-28'];
 
-  String? acdyr;
+  Color StudentColorButton = Colors.black;
+  Color TeacherColorButton = Colors.white;
+  Color StudentTextButton = Colors.amber;
+  Color TeacherTextButton = Colors.black;
+  void clrchg() {
+    setState(() {
+      if (userType == "Student") {
+        StudentColorButton = Colors.black;
+        TeacherColorButton = Colors.white;
+        StudentTextButton = Colors.amber;
+        TeacherTextButton = Colors.black;
+      } else {
+        StudentColorButton = Colors.white;
+        TeacherColorButton = Colors.black;
+        StudentTextButton = Colors.black;
+        TeacherTextButton = Colors.amber;
+      }
+    });
+  }
+
+  // String? acdyr;
+  String? userType = "Student";
 
   FirebaseFirestore db = FirebaseFirestore.instance;
 
@@ -28,7 +49,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Student Registration', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Registration', style: TextStyle(fontWeight: FontWeight.bold)),
         // centerTitle: true,
         backgroundColor: Colors.amber,
       ),
@@ -39,8 +60,46 @@ class _RegistrationPageState extends State<RegistrationPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: 10),
-              buildStudentFields()
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    userType = "Student";
+                    clrchg();
+                    //  StudentColorButton = Colors.black;
+                  });
+                },
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all(StudentColorButton),
+                    foregroundColor:
+                        MaterialStateProperty.all(StudentTextButton)),
+                child: const Text(
+                  'Student',
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    userType = "Teacher";
+                    clrchg();
+                  });
+                },
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(TeacherColorButton),
+                  foregroundColor: MaterialStateProperty.all(TeacherTextButton),
+                ),
+                child: const Text(
+                  'Teacher',
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+              const SizedBox(height: 20),
+              if (userType == "Student") 
+                buildStudentFields() 
+              else 
+                buildTeacherFields(),
             ],
           ),
         ),
@@ -85,28 +144,28 @@ class _RegistrationPageState extends State<RegistrationPage> {
           //     acdyr.text = val;
           //   },
           // ),
-          DropdownButtonFormField<String>(
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please select a year';
-              }
-              return null;
-            },
-            // hint: const Text("Select"),
-            value: acdyr,
-            items: years
-              .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-              .toList(),
-            onChanged: (String? newValue) {
-              setState(() {
-                acdyr = newValue;
-              });
-            },
-            decoration: const InputDecoration(
-              labelText: 'Course',
-              // border: OutlineInputBorder(),
-            ),
-          ),
+          // DropdownButtonFormField<String>(
+          //   validator: (value) {
+          //     if (value == null || value.isEmpty) {
+          //       return 'Please select a year';
+          //     }
+          //     return null;
+          //   },
+          //   // hint: const Text("Select"),
+          //   value: acdyr,
+          //   items: years
+          //     .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+          //     .toList(),
+          //   onChanged: (String? newValue) {
+          //     setState(() {
+          //       acdyr = newValue;
+          //     });
+          //   },
+          //   decoration: const InputDecoration(
+          //     labelText: 'Course',
+          //     // border: OutlineInputBorder(),
+          //   ),
+          // ),
           TextFormField(
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -181,47 +240,109 @@ class _RegistrationPageState extends State<RegistrationPage> {
       child: Column(
         children: [
           TextFormField(
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your name';
+              }
+              return null;
+            },
             controller: name,
             decoration: const InputDecoration(labelText: 'Name of teacher'),
           ),
           TextFormField(
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your KTU ID';
+              }
+              return null;
+            },
             controller: ktuid,
             decoration: const InputDecoration(labelText: 'KTU ID'),
           ),
+          // DropdownButtonFormField<String>(
+          //   validator: (value) {
+          //     if (value == null || value.isEmpty) {
+          //       return 'Please select a year';
+          //     }
+          //     return null;
+          //   },
+          //   // hint: const Text("Select"),
+          //   value: acdyr,
+          //   items: years
+          //     .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+          //     .toList(),
+          //   onChanged: (String? newValue) {
+          //     setState(() {
+          //       acdyr = newValue;
+          //     });
+          //   },
+          //   decoration: const InputDecoration(
+          //     labelText: 'Course',
+          //     // border: OutlineInputBorder(),
+          //   ),
+          // ),
           TextFormField(
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your email ID';
+              }
+              return null;
+            },
             controller: email,
             decoration: const InputDecoration(labelText: 'Email ID'),
           ),
+          // TextFormField(
+          //   validator: (value) {
+          //     if (value == null || value.isEmpty) {
+          //       return 'Please enter some text';
+          //     }
+          //     return null;
+          //   },
+          //   controller: userid,
+          //   decoration: const InputDecoration(labelText: 'Username'),
+          // ),
           TextFormField(
-            controller: userid,
-            decoration: const InputDecoration(labelText: 'User name'),
-          ),
-          TextFormField(
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter a password';
+              }
+              return null;
+            },
             controller: password,
             decoration: const InputDecoration(labelText: 'Password'),
             obscureText: true,
           ),
           TextFormField(
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter a password';
+              }
+              if (value != password.text) {
+                return 'The passwords entered do not match';
+              }
+              return null;
+            },
             controller: confirmpassword,
             decoration: const InputDecoration(labelText: 'Confirm Password'),
             obscureText: true,
           ),
           Padding(
-            padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.all(20.0),
             child: ElevatedButton(
-                onPressed: () {
-                  _register(context,email.text,password.text);
-                  // Handle teacher registration logic
-                },
-                style: ElevatedButton.styleFrom(
-                  fixedSize: const Size(200, 50),
-                  backgroundColor: Colors.amber,
-                  foregroundColor: Colors.black,
-                ),
-                child: const Text(
-                  'Submit',
-                  style: TextStyle(fontSize: 20),
-                )),
+              onPressed: () {
+                _register(context,email.text,password.text);
+                // Handle student registration logic
+              },
+              style: ElevatedButton.styleFrom(
+                fixedSize: const Size(200, 50),
+                backgroundColor: Colors.amber,
+                foregroundColor: Colors.black,
+              ),
+              child: const Text(
+                'Submit',
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
           ),
         ],
       ),
@@ -235,13 +356,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
         try {
           final cred = await _auth.createUserWithEmailAndPassword(email: mail,password: pass);
           final user = <String, dynamic>{
-            "batch": acdyr,
-            "dept": "Computer Science and Engineering",
+            // "batch": acdyr,
+            // "dept": "Computer Science and Engineering",
             "email": email.text,
             "ktuID": ktuid.text,
             "name": name.text,
             "uid": cred.user?.uid,
-            "userType": "Student"
+            "userType": userType
           };
           db.collection("users").add(user).then((DocumentReference doc) => print('DocumentSnapshot added with ID: ${doc.id}'));
           Navigator.pop(context);

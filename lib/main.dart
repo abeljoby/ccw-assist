@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:ccwassist/firebase_options.dart';
-
+import 'package:ccwassist/screens/joinclassroom.dart';
+import 'package:ccwassist/screens/createclassroom.dart';
 import 'package:ccwassist/screens/splashscreen.dart';
 import 'package:ccwassist/screens/scheduledtests.dart';
 import 'package:ccwassist/screens/testhistory.dart';
@@ -49,7 +50,8 @@ class MyApp extends StatelessWidget {
         '/qbank':(context) => const QBank(),
         '/qform':(context) => const QuestionForm(),
         '/createtest':(context) => const CreateTest(),
-        // '/qp':(context) => const QuestionPa(),
+        '/joinclass':(context) => const JoinClassroom(),
+        '/createclass':(context) => const CreateClassroom(),        // '/qp':(context) => const QuestionPa(),
         '/scheduledtests' :(context) => const ScheduledTests(),
         '/upcomingtests' :(context) => const UpcomingTests(),
         '/testhistory' :(context) => const TestHistory(),
