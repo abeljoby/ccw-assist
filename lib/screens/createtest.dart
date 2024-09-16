@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateTest extends StatefulWidget {
   const CreateTest({super.key});
@@ -16,15 +17,63 @@ class _CreateTestState extends State<CreateTest> {
   TextEditingController timeInput = TextEditingController();
   final MultiSelectController _controller = MultiSelectController();
   final durations = ['15 min','30 min', '60 min'];
-  final courses = {'DMS':'Discrete Mathematical Structures', 'DS':'Data Structures','COA':'Computer Organization and Architecture', 'DBMS':'Database Management Systems', 'OS':'Operating Systems', 'FLAT':'Formal Languages and Automata Theory'};
+  final departments = {'CSE':'Computer Science and Engineering', 'ECE':'Electronics and Communications Engineering','EEE':'Electrical and Electronics Engineering', 'ME':'Mechanical Engineering', 'CE':'Civil Engineering'};
+  List<String> courses = [];
+  // final courses = {'DMS':'Discrete Mathematical Structures', 'DS':'Data Structures','COA':'Computer Organization and Architecture', 'DBMS':'Database Management Systems', 'OS':'Operating Systems', 'FLAT':'Formal Languages and Automata Theory'};
   String? selectedduration;
+  String? selecteddept;
   String? selectedcourse;
   int? questions = 0;
   late List<String> selectedmodules;
+  late List<String> classrooms;
 
   final _formKey = GlobalKey<FormState>();
 
   FirebaseFirestore db = FirebaseFirestore.instance;
+
+  late String? name = '';
+  late String? ktuID = '';
+  
+  @override
+  void initState() {
+    loadUserDetails();
+    loadClassrooms();
+    super.initState();
+  }
+
+  void loadUserDetails() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      name = prefs.getString("name");
+      ktuID = prefs.getString("ktuID");
+    });
+  }
+
+  void loadClassrooms() async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('classrooms')
+        .where('Teacher.ktuID', isEqualTo: ktuID)
+        .get();
+    setState(() {
+      classrooms = querySnapshot.docs.map((doc) => doc['Name'] as String).toList();
+    });
+  }
+
+  List<String> getSubCategories(String department) {
+    if (department == 'CE') {
+      return ['Mechanics of Solids', 'Fluid Mechanics and Hydraulics', 'Surveying & Geomatics', 'Geotechnical Engineering I', 'Construction Technology and Management'];
+    } else if (department == 'EEE') {
+      return ['Circuits and Networks', 'DC Machines and Transformers', 'Digital Electronics', 'Power Systems I', 'Signals and Systems'];
+    } else if (department == 'ECE') {
+      return ['Analog Circuits', 'Logic Circuit Design', 'Linear Integrated Circuits', 'Digital Signal Processing', 'Analog and Digital Communication'];
+    } else if (department == 'ME') {
+      return ['Mechanics of Fluids', 'Metallurgy and Material Science', 'Engineering Thermodynamics', 'Manufacturing Process', 'Mechanics of Machinery'];
+    } else if (department == 'CSE') {
+      return ['Data Structures', 'Computer Organization and Architecture', 'Database Management Systems', 'Operating Systems', 'Formal Languages and Automata Theory'];
+    } else {
+      return [];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +92,24 @@ class _CreateTestState extends State<CreateTest> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start, 
               children: [
+                DropdownButtonFormField(
+                  decoration: const InputDecoration(
+                    labelText: "Classroom",
+                  ),
+                  borderRadius: BorderRadius.circular(20.0),
+                  items: classrooms
+                      .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                      .toList(),
+                  onChanged: (val) {
+                    selectedduration = val;
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty || value == 'Select') {
+                      return 'Please select a duration';
+                    }
+                    return null;
+                  },
+                ),
                 TextFormField(
                   controller: dateInput,
                   decoration: const InputDecoration(
@@ -122,14 +189,39 @@ class _CreateTestState extends State<CreateTest> {
                 ),
                 DropdownButtonFormField(
                   decoration: const InputDecoration(
+                    labelText: "Department",
+                  ),
+                  borderRadius: BorderRadius.circular(20.0),
+                  items: departments.keys
+                      .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selecteddept = value;
+                      selectedcourse = null; // Reset subCategory when category changes
+                      courses = getSubCategories(value!); // Update subCategories based on selected category
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty || value == 'Select') {
+                      return 'Please select a department';
+                    }
+                    return null;
+                  },
+                ),
+                DropdownButtonFormField(
+                  value: selectedcourse,
+                  decoration: const InputDecoration(
                     labelText: "Course",
                   ),
                   borderRadius: BorderRadius.circular(20.0),
-                  items: courses.keys
-                      .map((e) => DropdownMenuItem(value: courses[e], child: Text(e)))
+                  items: courses
+                      .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                       .toList(),
-                  onChanged: (val) {
-                    selectedcourse = val;
+                  onChanged: (value) {
+                    setState(() {
+                      selectedcourse = value;
+                    });
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty || value == 'Select') {
@@ -189,7 +281,8 @@ class _CreateTestState extends State<CreateTest> {
                         "StartDate": dateInput.text,
                         "StartTime": timeInput.text,
                         "Duration": selectedduration,
-                        "Batch": "2023-24"
+                        "Department": selecteddept,
+                        // "Batch": "2023-24"
                       };
                       Navigator.push(context,MaterialPageRoute(builder: ((context) => GenerateQuestionPaper(data: test))));
                       ScaffoldMessenger.of(context).showSnackBar(

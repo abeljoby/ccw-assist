@@ -95,7 +95,7 @@ class CreateClassroomState extends State<CreateClassroom> {
                     hint: const Text("Select"),
                     value: Department,
                     items: departments.keys
-                      .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                      .map((e) => DropdownMenuItem(value: departments[e], child: Text(e)))
                       .toList(),
                     onChanged: (String? newValue) {
                       setState(() {
